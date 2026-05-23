@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高敏感人格测试 - 超人导师</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+        background: #f5f5f7;
+        color: #1d1d1f;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #fff 0%, #f5f5f7 46%); }
+      a, button { font: inherit; }
+      a { color: inherit; text-decoration: none; }
+      button { border: 0; cursor: pointer; }
+      .site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,.08); background: rgba(245,245,247,.78); backdrop-filter: saturate(180%) blur(20px); }
+      .nav { width: min(1040px, calc(100% - 32px)); min-height: 56px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+      .brand { font-size: 17px; font-weight: 700; }
+      .back { color: #0066cc; font-size: 15px; font-weight: 600; white-space: nowrap; }
+      main { width: min(1040px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 88px; }
+      .intro, .quiz-shell, .result-shell { border: 1px solid rgba(0,0,0,.08); border-radius: 8px; background: rgba(255,255,255,.82); box-shadow: 0 24px 70px rgba(0,0,0,.07); }
+      .intro { overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr); min-height: 620px; }
+      .intro-copy { padding: clamp(28px, 5vw, 58px); display: flex; flex-direction: column; justify-content: center; }
+      .eyebrow { margin: 0 0 14px; color: #b15f6b; font-size: 17px; font-weight: 700; }
+      h1 { margin: 0 0 20px; font-size: clamp(42px, 7vw, 82px); line-height: 1.02; letter-spacing: 0; }
+      .lead { margin: 0 0 26px; color: #424245; font-size: clamp(19px, 2.4vw, 25px); line-height: 1.5; }
+      .intro-meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 34px; padding: 0; list-style: none; }
+      .intro-meta li { border: 1px solid rgba(177,95,107,.22); border-radius: 999px; padding: 8px 13px; color: #6e353d; background: #fff6f7; font-size: 14px; font-weight: 700; }
+      .primary-button, .secondary-button, .option { transition: transform 160ms ease, background 160ms ease, border-color 160ms ease; }
+      .primary-button { width: fit-content; min-height: 46px; border-radius: 999px; padding: 12px 24px; background: #0066cc; color: #fff; font-weight: 700; }
+      .primary-button:hover, .secondary-button:hover, .option:hover { transform: translateY(-1px); }
+      .intro-art { min-height: 420px; background: #fff6f7; display: grid; place-items: center; padding: 28px; }
+      .intro-art img { width: min(100%, 460px); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; box-shadow: 0 24px 60px rgba(177,95,107,.18); }
+      .quiz-shell { padding: clamp(18px, 4vw, 34px); }
+      .topbar { display: grid; gap: 10px; margin-bottom: 24px; }
+      .topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; color: #6e6e73; font-size: 15px; font-weight: 700; }
+      .progress-track { height: 10px; overflow: hidden; border-radius: 999px; background: #e8e8ed; }
+      .progress-fill { height: 100%; width: 0; border-radius: inherit; background: #ff7c86; transition: width 220ms ease; }
+      .question-layout { display: grid; grid-template-columns: minmax(280px, .88fr) minmax(0, 1.12fr); gap: 28px; align-items: start; }
+      .question-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: #f5f5f7; }
+      .question-title { margin: 0 0 14px; font-size: clamp(28px, 4vw, 44px); line-height: 1.12; letter-spacing: 0; }
+      .scene { margin: 0 0 22px; color: #424245; font-size: 19px; line-height: 1.72; }
+      .options { display: grid; gap: 12px; }
+      .option { width: 100%; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; padding: 17px; background: #fff; color: #1d1d1f; text-align: left; }
+      .option-key { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #f5f5f7; color: #0066cc; font-weight: 800; }
+      .option-text { color: #424245; font-size: 17px; line-height: 1.55; }
+      .quiz-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 22px; }
+      .secondary-button { min-height: 42px; border: 1px solid rgba(0,102,204,.32); border-radius: 999px; padding: 10px 18px; background: #fff; color: #0066cc; font-weight: 700; }
+      .secondary-button:disabled { cursor: default; opacity: .42; transform: none; }
+      .result-shell { padding: clamp(28px, 5vw, 58px); }
+      .score-label { margin: 0 0 12px; color: #6e6e73; font-size: 17px; font-weight: 700; }
+      .score { margin: 0 0 18px; font-size: clamp(64px, 12vw, 128px); line-height: .95; letter-spacing: 0; }
+      .result-name { margin: 0 0 14px; font-size: clamp(30px, 5vw, 54px); line-height: 1.1; }
+      .result-copy { max-width: 760px; margin: 0 0 34px; color: #424245; font-size: 20px; line-height: 1.75; }
+      .result-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+      .hidden { display: none !important; }
+      @media (max-width: 820px) {
+        .intro, .question-layout { grid-template-columns: 1fr; }
+        .intro { min-height: auto; }
+        .intro-art { min-height: auto; }
+        .nav { align-items: flex-start; flex-direction: column; padding: 12px 0; }
+        main { padding-top: 34px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="测试导航">
+        <a class="brand" href="../index.html">超人导师</a>
+        <a class="back" href="../index.html#tests-title">返回首页</a>
+      </nav>
+    </header>
+    <main>
+      <section class="intro" id="intro">
+        <div class="intro-copy">
+          <p class="eyebrow">55 个生活场景</p>
+          <h1>高敏感人格测试</h1>
+          <p class="lead">通过家庭、关系、学习、工作和日常感受里的具体选择，分析你对情绪、细节和关系信号的接收强度。</p>
+          <ul class="intro-meta">
+            <li>约 5 分钟</li>
+            <li>无需注册</li>
+            <li>即时生成结果</li>
+          </ul>
+          <button class="primary-button" id="startButton" type="button">开始测试</button>
+        </div>
+        <div class="intro-art">
+          <img src="../quiz-images/q001.jpg" alt="高敏感人格测试插图">
+        </div>
+      </section>
+
+      <section class="quiz-shell hidden" id="quiz" aria-live="polite">
+        <div class="topbar">
+          <div class="topbar-row">
+            <span id="questionCounter">第 1 / 55 题</span>
+            <span id="answeredCounter">已完成 0%</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="question-layout">
+          <img class="question-image" id="questionImage" src="" alt="题目场景插图">
+          <div>
+            <h2 class="question-title" id="questionTitle"></h2>
+            <p class="scene" id="questionScene"></p>
+            <div class="options" id="options"></div>
+            <div class="quiz-actions">
+              <button class="secondary-button" id="prevButton" type="button">上一题</button>
+              <span id="hintText">选择最接近真实反应的一项</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="result-shell hidden" id="result">
+        <p class="score-label">你的高敏感指数</p>
+        <p class="score"><span id="scoreValue">0</span><small>/100</small></p>
+        <h1 class="result-name" id="resultName"></h1>
+        <p class="result-copy" id="resultCopy"></p>
+        <div class="result-actions">
+          <button class="primary-button" id="restartButton" type="button">重新测试</button>
+          <a class="secondary-button" href="../index.html#consult">咨询超人导师</a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const questions = [{"id":"001","title":"父母安排周末课程","scene":"晚饭桌上，父母说周末给你报了一个课，语气很自然：“我们都是为你好。”但是你不想去，你会：","options":[{"key":"A","text":"直接说自己不想去，并解释需要休息。","sensitivity":1},{"key":"B","text":"先沉默吃饭，等气氛好一点再试探。","sensitivity":3},{"key":"C","text":"点头答应，回房间后再想办法消化。","sensitivity":5}]},{"id":"003","title":"成绩比上次低了几名","scene":"成绩单发下来，你比上次低了几名。晚上回家前，你知道父母大概率会问成绩，你会：","options":[{"key":"A","text":"回家主动说明这次失误和下一步计划。","sensitivity":1},{"key":"B","text":"先把成绩放一放，等父母问了再说。","sensitivity":3},{"key":"C","text":"把卷子藏进书包，尽量拖到最后再面对。","sensitivity":5}]},{"id":"004","title":"亲戚夸你真懂事","scene":"亲戚来家里，你帮忙倒水、让座、陪笑。大人当着全家说：“这孩子真懂事。”你会：","options":[{"key":"A","text":"礼貌接受夸奖，之后给自己留点独处时间。","sensitivity":2},{"key":"B","text":"继续表现得更周到，让场面维持漂亮。","sensitivity":4},{"key":"C","text":"找借口离开客厅，回房间安静一会儿。","sensitivity":3}]},{"id":"005","title":"亲戚打听你的隐私","scene":"过年时，一个总爱打听隐私的亲戚坐到你旁边，开始问收入、恋爱、未来打算。父母在旁边提醒你“别没礼貌”，你会：","options":[{"key":"A","text":"简短回应，避开自己不想回答的问题。","sensitivity":1},{"key":"B","text":"硬着头皮聊完，尽量不让场面冷掉。","sensitivity":4},{"key":"C","text":"找理由去厨房或洗手间，暂时离开现场。","sensitivity":3}]},{"id":"006","title":"父母争吵时提到你","scene":"客厅里父母本来在吵钱的事，后来话题转到你身上，说你不省心、不争气。你站在门口，你会：","options":[{"key":"A","text":"说明这件事和你无关，然后离开现场。","sensitivity":1},{"key":"B","text":"解释自己最近已经在努力，试图让他们平静。","sensitivity":4},{"key":"C","text":"先不说话，等他们情绪过去再处理。","sensitivity":3}]},{"id":"009","title":"想让父母买一件东西","scene":"你看中一双鞋，价格不算离谱，但需要父母付款。你准备开口时，会：","options":[{"key":"A","text":"直接说明需求和预算，一起商量能不能买。","sensitivity":1},{"key":"B","text":"先试探父母心情，再找合适时机说。","sensitivity":3},{"key":"C","text":"反复想这件事值不值得，最后可能不提了。","sensitivity":5}]},{"id":"011","title":"父母开始翻旧账","scene":"你只是晚回家十分钟，父母却从小学成绩讲到以前顶嘴。旧事一件件被提起来，你会：","options":[{"key":"A","text":"打断旧账，只讨论今天晚回家的事。","sensitivity":1},{"key":"B","text":"尽力解释，但尽量不激化冲突。","sensitivity":3},{"key":"C","text":"先听他们说完，暂时不再辩解。","sensitivity":4}]},{"id":"012","title":"你说累，对方说别人都能忍","scene":"你说最近很累，父母回了一句：“谁不累？别人都能忍。”你会：","options":[{"key":"A","text":"坚持说明自己的状态，并安排休息。","sensitivity":1},{"key":"B","text":"不继续争辩，但按自己的节奏恢复。","sensitivity":2},{"key":"C","text":"立刻收回话题，继续把事情做完。","sensitivity":5}]},{"id":"013","title":"回家后想一个人待会儿","scene":"你回家后想关门待一会儿。父母敲门说：“一家人有什么好躲的？别这么孤僻。”你会：","options":[{"key":"A","text":"说明自己需要安静，不是不想理家人。","sensitivity":1},{"key":"B","text":"开门坐一会儿，再找机会回房间。","sensitivity":3},{"key":"C","text":"放弃独处，去客厅陪他们待着。","sensitivity":5}]},{"id":"019","title":"父母说随便你","scene":"你问能不能改志愿，父母冷冷说：“随便你，反正以后别后悔。”你会：","options":[{"key":"A","text":"把“随便”当成授权，按自己的判断做决定。","sensitivity":1},{"key":"B","text":"继续追问他们真实想法，希望得到明确态度。","sensitivity":4},{"key":"C","text":"改选更容易让他们满意的方案。","sensitivity":5}]},{"id":"021","title":"填志愿页面打开着","scene":"填志愿页面开着，你想选一个自己喜欢的方向，但父母和亲戚都给过不同建议。你会：","options":[{"key":"A","text":"按自己的兴趣和现实条件做决定。","sensitivity":1},{"key":"B","text":"在喜欢和家人期待之间折中。","sensitivity":3},{"key":"C","text":"选最不容易被反对的专业。","sensitivity":5}]},{"id":"022","title":"假期是否回家","scene":"假期快到了，同学都在订回家的票。你看着购票页面，但并不确定自己想回去待很久，你会：","options":[{"key":"A","text":"缩短回家时间，给自己保留空间。","sensitivity":1},{"key":"B","text":"正常回去，但提前规划独处和离开的时间。","sensitivity":3},{"key":"C","text":"按家里期待待满整个假期。","sensitivity":5}]},{"id":"023","title":"父母要看你的手机","scene":"父母拿起你的手机，说“家长看看怎么了”。他们想翻聊天记录，你会：","options":[{"key":"A","text":"明确说手机和聊天记录是私人边界。","sensitivity":1},{"key":"B","text":"让他们看一部分，但避开最私人的内容。","sensitivity":3},{"key":"C","text":"交出去，尽快让这件事过去。","sensitivity":5}]},{"id":"025","title":"过年饭桌开始盘问","scene":"过年饭桌上，亲戚们从工资聊到婚恋，又聊到未来规划。你发现话题快转到自己身上，你会：","options":[{"key":"A","text":"只回应必要问题，不主动承担全桌气氛。","sensitivity":1},{"key":"B","text":"开玩笑转移话题，避免矛头落到自己身上。","sensitivity":3},{"key":"C","text":"提前准备标准答案，把场面顺利应付过去。","sensitivity":4}]},{"id":"027","title":"你讲起一个新计划","scene":"你兴奋地说自己有个新计划，父母第一句是：“别想太多，现实点。”你会：","options":[{"key":"A","text":"继续讲完计划，不急着让他们认可。","sensitivity":1},{"key":"B","text":"改成更保守的说法，减少被否定的部分。","sensitivity":3},{"key":"C","text":"停止分享，之后自己默默处理。","sensitivity":5}]},{"id":"028","title":"你说出“我不想这样”","scene":"你终于说了一句“我不想这样”。空气安静了两秒，父母脸色变了。你会：","options":[{"key":"A","text":"承认这就是你的真实想法，继续沟通。","sensitivity":1},{"key":"B","text":"放软语气，解释自己不是故意顶撞。","sensitivity":3},{"key":"C","text":"立刻道歉，把话收回来。","sensitivity":5}]},{"id":"029","title":"父母说你没出息","scene":"某次争执里，父母说了句“你这样没出息”。后来类似的话题再次出现，你会：","options":[{"key":"A","text":"把那句话当成当时的情绪，不拿来定义自己。","sensitivity":1},{"key":"B","text":"用更多成果证明自己不是那样。","sensitivity":3},{"key":"C","text":"避开这类话题，免得再次被刺到。","sensitivity":4}]},{"id":"032","title":"父母半夜向你诉苦","scene":"父母半夜跟你说工作不顺、婚姻委屈、钱不够用。你第二天还有自己的事要处理，你会：","options":[{"key":"A","text":"听见他们的难处，但不把它变成自己的任务。","sensitivity":1},{"key":"B","text":"安慰他们一会儿，再提醒自己也需要睡觉。","sensitivity":3},{"key":"C","text":"陪他们聊很久，并减少自己的需求。","sensitivity":5}]},{"id":"034","title":"父母否定你的爱好","scene":"你曾经很喜欢画画，父母说“这能当饭吃吗”。后来你又看到画笔和教程，你会：","options":[{"key":"A","text":"重新把爱好捡起来，先不急着证明价值。","sensitivity":1},{"key":"B","text":"偶尔偷偷做，不让家里知道。","sensitivity":3},{"key":"C","text":"划走教程，把这件事继续放下。","sensitivity":5}]},{"id":"041","title":"老师课堂点名批评","scene":"课堂上老师突然点名批评你作业粗心，全班都看过来。下课后，你会：","options":[{"key":"A","text":"问清具体问题，把它当成一次反馈。","sensitivity":1},{"key":"B","text":"假装没事，等这阵尴尬过去。","sensitivity":3},{"key":"C","text":"避开老师和同学，尽量不再被注意。","sensitivity":5}]},{"id":"042","title":"公开发言时读错字","scene":"你在班里读错一个字，全班有人笑了。下次又要公开发言，你会：","options":[{"key":"A","text":"正常准备，这次照样完成。","sensitivity":1},{"key":"B","text":"提前练很多遍，尽量避免再出错。","sensitivity":3},{"key":"C","text":"想办法换任务，不再公开读。","sensitivity":5}]},{"id":"048","title":"小组作业发生冲突","scene":"小组里两个人因为分工吵起来，其他人都沉默。任务还没完成，你会：","options":[{"key":"A","text":"只负责自己的部分，不替所有人收拾。","sensitivity":1},{"key":"B","text":"协调一下，但说清自己能承担多少。","sensitivity":3},{"key":"C","text":"把最难的部分接过来，让大家别吵。","sensitivity":5}]},{"id":"052","title":"梦见考试","scene":"你已经毕业很久，却梦见快考试了、座位找不到、卷子没写完。醒来后，你会：","options":[{"key":"A","text":"把它当成压力信号，检查最近是否过载。","sensitivity":3},{"key":"B","text":"起床后优先处理现实里的待办。","sensitivity":1},{"key":"C","text":"继续回想梦里的细节，想弄清哪里出错。","sensitivity":5}]},{"id":"053","title":"朋友几个小时没回消息","scene":"你发了一条消息，朋友几个小时没回。你知道对方可能在忙，你会：","options":[{"key":"A","text":"默认对方在忙，继续做自己的事。","sensitivity":0},{"key":"B","text":"等一段时间，再发一条轻松消息。","sensitivity":2},{"key":"C","text":"翻之前的聊天记录，确认关系有没有变化。","sensitivity":5}]},{"id":"054","title":"聚会结束回到家","scene":"聚会结束后，大家在群里发照片。你回到家，想起自己席间说过几句话，你会：","options":[{"key":"A","text":"不逐句审判自己，让聚会自然过去。","sensitivity":0},{"key":"B","text":"找一个熟人确认今天气氛还好吗。","sensitivity":3},{"key":"C","text":"复盘每个细节，决定下次少说一点。","sensitivity":5}]},{"id":"055","title":"同事冷脸没有回应","scene":"电梯里同事脸色很冷，没怎么回应你的招呼。你会：","options":[{"key":"A","text":"不把别人的状态自动归因到自己。","sensitivity":0},{"key":"B","text":"回忆一下互动细节，确认有没有冒犯。","sensitivity":4},{"key":"C","text":"主动对对方更客气，避免关系出问题。","sensitivity":5}]},{"id":"063","title":"恋人回复变短","scene":"恋人平时会详细回你，今天只回了“嗯，知道了”。你会：","options":[{"key":"A","text":"直接问对方是不是累了，还是有事想说。","sensitivity":2},{"key":"B","text":"先观察对方后续反应。","sensitivity":3},{"key":"C","text":"改变自己的语气，尽量不刺激对方。","sensitivity":5}]},{"id":"064","title":"想让对方周末陪你","scene":"你想让对方周末陪你，但还不确定对方有没有安排。你会：","options":[{"key":"A","text":"清楚提出需求，同时接受对方可以拒绝。","sensitivity":1},{"key":"B","text":"用很委婉的方式暗示，希望对方主动懂。","sensitivity":4},{"key":"C","text":"干脆不说，避免给对方添麻烦。","sensitivity":5},{"key":"D","text":"直接把自己的期待和失落都摊开讲。","sensitivity":2}]},{"id":"067","title":"稳定关系里的间隔","scene":"这段关系一直稳定，但你们因为各自忙碌，几天没怎么见面。你会：","options":[{"key":"A","text":"把不安说出来，但不要求对方立刻证明。","sensitivity":2},{"key":"B","text":"主动安排一次见面或聊天。","sensitivity":3},{"key":"C","text":"暂时拉开距离，看看对方会不会主动靠近。","sensitivity":5}]},{"id":"068","title":"朋友情绪低落","scene":"朋友今天情绪很低，你问了两句，对方说“没事”。你会：","options":[{"key":"A","text":"表达关心后，把空间留给对方。","sensitivity":1},{"key":"B","text":"多陪一会儿，确认自己没有忽略对方。","sensitivity":3},{"key":"C","text":"不断猜原因，继续追问直到对方说清楚。","sensitivity":5}]},{"id":"073","title":"夜里有细小声音","scene":"夜里房间很暗，空调轻响，水管偶尔滴一下。你准备睡觉，你会：","options":[{"key":"A","text":"调整环境或戴耳塞，主动降低刺激。","sensitivity":4},{"key":"B","text":"翻个身，试着不处理这些声音。","sensitivity":2},{"key":"C","text":"起身检查声音来源，确认后再睡。","sensitivity":5}]},{"id":"076","title":"桌面有点乱","scene":"桌上堆着快递盒、杯子和几张纸。你打开电脑准备做事，你会：","options":[{"key":"A","text":"花十分钟整理关键区域，再开始工作。","sensitivity":3},{"key":"B","text":"忍着不管，先把最重要的事做完。","sensitivity":1},{"key":"C","text":"在整理和工作之间来回切换。","sensitivity":5}]},{"id":"078","title":"热闹一天后朋友来电","scene":"白天见了很多人，晚上朋友还想语音。你看到来电提示，你会：","options":[{"key":"A","text":"说明今天需要安静，改天再聊。","sensitivity":3},{"key":"B","text":"接起来聊短一点，尽量不让对方失望。","sensitivity":5},{"key":"C","text":"直接不接，等明天再解释。","sensitivity":4}]},{"id":"081","title":"领导说最近辛苦了","scene":"领导路过说了句“最近辛苦了”。手头方案已经达到交付标准，你会：","options":[{"key":"A","text":"接受肯定，按原计划下班。","sensitivity":1},{"key":"B","text":"再多改一点，让成果更稳。","sensitivity":3},{"key":"C","text":"主动加码，把后续细节也提前做了。","sensitivity":5}]},{"id":"084","title":"晚上任务还没做完","scene":"晚上十点，任务还差一部分。你已经很困，但明天也还有时间，你会：","options":[{"key":"A","text":"评估优先级，明确明天继续。","sensitivity":1},{"key":"B","text":"再撑一小时，做完关键部分。","sensitivity":3},{"key":"C","text":"熬到全部做完再睡。","sensitivity":5}]},{"id":"085","title":"买电脑时选项太多","scene":"你想买一台电脑，打开测评后看见几十个型号。参数、价格、差评、售后都要比较，你会：","options":[{"key":"A","text":"先定三个硬条件，再从少量选项里选。","sensitivity":1},{"key":"B","text":"收藏很多资料，准备再比较几天。","sensitivity":4},{"key":"C","text":"先不买，等以后更确定再说。","sensitivity":5}]},{"id":"086","title":"稳定工作让你感到无聊","scene":"这份工作外人看来不错，父母也很满意。但你每天坐在工位上，明显觉得无聊和重复，你会：","options":[{"key":"A","text":"承认这个感受，开始探索新可能。","sensitivity":1},{"key":"B","text":"维持稳定，业余做点喜欢的事。","sensitivity":2},{"key":"C","text":"不再想这件事，把注意力放在收入和安全上。","sensitivity":4}]},{"id":"087","title":"辞职信写了一半","scene":"你受够了现在的工作，辞职信写了一半。想到父母可能会说“现在工作多难找”，你会：","options":[{"key":"A","text":"按现实准备和个人判断决定去留。","sensitivity":1},{"key":"B","text":"先找父母试探，看看他们能不能接受。","sensitivity":4},{"key":"C","text":"删掉辞职信，等以后更稳再说。","sensitivity":5}]},{"id":"088","title":"想做一个喜欢的小项目","scene":"你想拍视频、写东西、做一个小项目。它暂时看不到收益，但你确实有兴趣，你会：","options":[{"key":"A","text":"先做出最小版本，让喜欢变成作品。","sensitivity":1},{"key":"B","text":"一边做一边查变现方式，给自己安全感。","sensitivity":3},{"key":"C","text":"等想清楚怎么赚钱后再开始。","sensitivity":4}]},{"id":"090","title":"刷到别人勇敢转行","scene":"你刷到同龄人辞职旅行、转行、公开表达自己。你会：","options":[{"key":"A","text":"把触动写下来，拆出自己也能做的一步。","sensitivity":3},{"key":"B","text":"收藏起来，等以后更有条件再说。","sensitivity":4},{"key":"C","text":"关掉页面，回到原来的生活节奏。","sensitivity":2}]},{"id":"097","title":"追的角色在结局里离开","scene":"你追了很久的角色在结局里离开。合上屏幕后，你会：","options":[{"key":"A","text":"接受这种投入，把它当成感受力的一部分。","sensitivity":3},{"key":"B","text":"找同好讨论，慢慢从故事里出来。","sensitivity":4},{"key":"C","text":"暂时不碰类似作品，给自己缓一缓。","sensitivity":5}]},{"id":"099","title":"朋友约你去音乐节","scene":"朋友约你去音乐节。你想去，但也知道现场会有人群、音浪和长时间社交，你会：","options":[{"key":"A","text":"去，但提前安排退出路线和恢复时间。","sensitivity":3},{"key":"B","text":"先答应，看当天状态再决定待多久。","sensitivity":4},{"key":"C","text":"拒绝邀请，换一个低刺激的活动。","sensitivity":5}]},{"id":"100","title":"你看到很多别人忽略的东西","scene":"日常聊天、家庭关系、职场场面里，你经常能看到别人没有说出口的情绪和规则。你会：","options":[{"key":"A","text":"把这种觉察用于表达、创造或行动。","sensitivity":3},{"key":"B","text":"只和少数能理解的人分享这些观察。","sensitivity":4},{"key":"C","text":"尽量少看少想，避免自己太累。","sensitivity":5}]},{"id":"101","title":"对方今晚没有说晚安","scene":"平时对方都会说晚安，今晚只回了一个表情。你会：","options":[{"key":"A","text":"正常去睡，不用一句话证明关系。","sensitivity":0},{"key":"B","text":"再发一句轻松的话，看看对方反应。","sensitivity":3},{"key":"C","text":"翻之前的聊天记录，确认关系有没有变化。","sensitivity":5}]},{"id":"103","title":"吵架后对方沉默","scene":"争吵结束后，对方沉默不说话。你也觉得自己有委屈，你会：","options":[{"key":"A","text":"等双方冷静后，再讨论各自责任。","sensitivity":1},{"key":"B","text":"先缓和气氛，但保留自己的立场。","sensitivity":3},{"key":"C","text":"先道歉，让关系赶紧恢复。","sensitivity":5}]},{"id":"104","title":"今天想要一个拥抱","scene":"你今天很累，想让对方抱一会儿。对方正在做自己的事，你会：","options":[{"key":"A","text":"直接说“我现在想被抱一下”。","sensitivity":1},{"key":"B","text":"靠近一点，等对方主动发现。","sensitivity":4},{"key":"C","text":"什么都不说，自己处理这份需求。","sensitivity":5}]},{"id":"106","title":"恋人夸别人有魅力","scene":"恋人随口夸一个人“很有魅力”。你会：","options":[{"key":"A","text":"半开玩笑问对方是不是喜欢那种类型。","sensitivity":4},{"key":"B","text":"表面没事，之后自己慢慢消化。","sensitivity":5},{"key":"C","text":"直接说这句话让你有点不舒服。","sensitivity":2},{"key":"D","text":"不放在心上，继续原来的话题。","sensitivity":0}]},{"id":"110","title":"对方说没事但动作变重","scene":"对方说“没事”，但杯子放重了一点，眼神也避开了你。你会：","options":[{"key":"A","text":"直接提问确认对方是否需要沟通或独处。","sensitivity":2},{"key":"B","text":"变得更小心，减少刺激对方。","sensitivity":5},{"key":"C","text":"一直观察细节，判断对方到底怎么了。","sensitivity":4},{"key":"D","text":"暂时当作没事，等对方主动说。","sensitivity":1}]},{"id":"111","title":"对方下班回来情绪很差","scene":"对方下班回来情绪很差。你不知道这件事是否和你有关，你会：","options":[{"key":"A","text":"关心对方，但不把修复情绪当成义务。","sensitivity":1},{"key":"B","text":"陪着对方，尽量让气氛好一点。","sensitivity":3},{"key":"C","text":"想办法哄好对方，否则自己也难以安心。","sensitivity":5}]},{"id":"112","title":"对方忘了你提过的小事","scene":"你记得对方喜欢的口味、怕冷、最近的压力；但你随口提过的一件小事，对方完全忘了。你会：","options":[{"key":"A","text":"具体说出这件小事对你的意义。","sensitivity":2},{"key":"B","text":"先压着不说，观察对方是不是一直这样。","sensitivity":4},{"key":"C","text":"不再提这件事，但心里重新评估关系。","sensitivity":5}]},{"id":"113","title":"对方总临时改变计划","scene":"对方总临时改变计划，你已经不太舒服。下一次类似情况出现时，你会：","options":[{"key":"A","text":"明确提出边界和期待。","sensitivity":1},{"key":"B","text":"用温和语气包装很久，尽量不显得强硬。","sensitivity":4},{"key":"C","text":"继续配合，等自己真的受不了再说。","sensitivity":5}]},{"id":"116","title":"你不同意对方的决定","scene":"你不喜欢对方某个决定，但对方已经有点不耐烦。你会：","options":[{"key":"A","text":"保持平静，但说出真实不同意。","sensitivity":1},{"key":"B","text":"先顺着，等以后有机会再谈。","sensitivity":4},{"key":"C","text":"直接让步，维持当下和平。","sensitivity":5}]},{"id":"117","title":"对方突然不回消息","scene":"对方突然不回消息、不解释，也没有明确说分手。你会：","options":[{"key":"A","text":"设定等待期限，保护自己的边界。","sensitivity":2},{"key":"B","text":"发一条清楚的信息，请对方明确态度。","sensitivity":3},{"key":"C","text":"连续追问，直到对方给出回应。","sensitivity":5}]},{"id":"119","title":"对方认真表达喜欢","scene":"对方认真说喜欢你。你会：","options":[{"key":"A","text":"接住当下的表达，不急着追问未来。","sensitivity":1},{"key":"B","text":"问一些确认性问题，让自己更安心。","sensitivity":3},{"key":"C","text":"表面接受，但心里先观察这份喜欢能持续多久。","sensitivity":5}]},{"id":"120","title":"恋爱后生活围着对方转","scene":"恋爱后，你的作息、兴趣、朋友都慢慢围着对方转。某天你发现自己很久没单独安排想做的事，你会：","options":[{"key":"A","text":"重新安排自己的时间和兴趣。","sensitivity":1},{"key":"B","text":"先减少一点依赖，看看关系会不会不稳。","sensitivity":4},{"key":"C","text":"继续配合对方的节奏，等以后再调整。","sensitivity":5}]}];
+      const answers = {};
+      let currentIndex = 0;
+
+      const intro = document.getElementById('intro');
+      const quiz = document.getElementById('quiz');
+      const result = document.getElementById('result');
+      const startButton = document.getElementById('startButton');
+      const restartButton = document.getElementById('restartButton');
+      const prevButton = document.getElementById('prevButton');
+      const questionCounter = document.getElementById('questionCounter');
+      const answeredCounter = document.getElementById('answeredCounter');
+      const progressFill = document.getElementById('progressFill');
+      const questionImage = document.getElementById('questionImage');
+      const questionTitle = document.getElementById('questionTitle');
+      const questionScene = document.getElementById('questionScene');
+      const options = document.getElementById('options');
+      const scoreValue = document.getElementById('scoreValue');
+      const resultName = document.getElementById('resultName');
+      const resultCopy = document.getElementById('resultCopy');
+
+      function getQuestionMax(question) {
+        return question.options.reduce((max, option) => Math.max(max, option.sensitivity), 0);
+      }
+
+      function calculateScore() {
+        let selectedTotal = 0;
+        let maxTotal = 0;
+        questions.forEach((question) => {
+          maxTotal += getQuestionMax(question);
+          const selectedOption = question.options.find((option) => option.key === answers[question.id]);
+          if (selectedOption) selectedTotal += selectedOption.sensitivity;
+        });
+        return maxTotal ? Math.round((selectedTotal / maxTotal) * 100) : 0;
+      }
+
+      function getResultType(score) {
+        if (score >= 85) return ['高敏感', '高敏感感知者', '你对关系里的细节、环境刺激和他人情绪有很强的接收力。它让你更细腻，也意味着你需要认真安排边界和恢复时间。'];
+        if (score >= 68) return ['中高敏感', '细节捕捉者', '你常常能提前察觉气氛变化，也容易被没有说出口的东西牵动。把这种感受力用在表达和创造里，会比一直压着更轻松。'];
+        if (score >= 48) return ['中敏感', '平衡观察者', '你会被部分场景触发，但通常也能回到自己的节奏里。你适合保留一点缓冲空间，再决定要不要回应外界。'];
+        if (score >= 28) return ['中低敏感', '稳定回应者', '你能注意到他人的状态，但不太容易被每个细节带走。多数时候，你会先处理事情本身，再处理情绪波动。'];
+        return ['低敏感', '松弛行动派', '你通常不太会反复咀嚼关系信号，也更容易把场景看作普通事件。这让你行动更干脆，也可以偶尔多听听自己的细小感受。'];
+      }
+
+      function updateQuestion() {
+        const question = questions[currentIndex];
+        const progress = Math.round(((currentIndex + 1) / questions.length) * 100);
+        questionCounter.textContent = '第 ' + (currentIndex + 1) + ' / ' + questions.length + ' 题';
+        answeredCounter.textContent = '已完成 ' + progress + '%';
+        progressFill.style.width = progress + '%';
+        questionImage.src = '../quiz-images/q' + question.id + '.jpg';
+        questionTitle.textContent = question.title;
+        questionScene.textContent = question.scene;
+        prevButton.disabled = currentIndex === 0;
+        options.replaceChildren(...question.options.map((option) => {
+          const button = document.createElement('button');
+          button.className = 'option';
+          button.type = 'button';
+          button.innerHTML = '<span class="option-key"></span><span class="option-text"></span>';
+          button.querySelector('.option-key').textContent = option.key;
+          button.querySelector('.option-text').textContent = option.text;
+          button.addEventListener('click', () => {
+            answers[question.id] = option.key;
+            if (currentIndex < questions.length - 1) {
+              currentIndex += 1;
+              updateQuestion();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              showResult();
+            }
+          });
+          return button;
+        }));
+      }
+
+      function showResult() {
+        const score = calculateScore();
+        const type = getResultType(score);
+        quiz.classList.add('hidden');
+        result.classList.remove('hidden');
+        scoreValue.textContent = score;
+        resultName.textContent = type[0] + ' · ' + type[1];
+        resultCopy.textContent = type[2];
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      startButton.addEventListener('click', () => {
+        intro.classList.add('hidden');
+        quiz.classList.remove('hidden');
+        currentIndex = 0;
+        updateQuestion();
+      });
+
+      prevButton.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex -= 1;
+          updateQuestion();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      restartButton.addEventListener('click', () => {
+        Object.keys(answers).forEach((key) => delete answers[key]);
+        currentIndex = 0;
+        result.classList.add('hidden');
+        intro.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    </script>
+  </body>
+</html>
