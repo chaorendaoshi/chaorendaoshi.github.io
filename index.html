@@ -264,105 +264,6 @@
         margin-top: 20px;
       }
 
-      .transition-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        display: grid;
-        place-items: center;
-        padding: 0;
-        background: transparent;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 420ms ease;
-      }
-
-      .transition-overlay.is-active {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .transition-overlay.is-exiting {
-        opacity: 0;
-      }
-
-      .transition-panel {
-        display: grid;
-        width: 100%;
-        height: 100%;
-        gap: 0;
-        justify-items: center;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 420ms ease;
-      }
-
-      .transition-overlay.is-active .transition-panel {
-        opacity: 1;
-      }
-
-      .transition-overlay.is-exiting .transition-panel {
-        opacity: 0;
-      }
-
-      .transition-label {
-        display: none;
-      }
-
-      .pixel-stage {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        justify-self: center;
-        border-radius: 0;
-        background: #030303;
-        box-shadow: none;
-        overflow: hidden;
-      }
-
-      .pixel-grid {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: min(74vw, 420px);
-        aspect-ratio: 1;
-        transform: translate(-50%, -50%);
-      }
-
-      .pixel {
-        position: absolute;
-        left: calc(var(--x) * 100% / 96);
-        top: calc(var(--y) * 100% / 96);
-        width: calc(100% / 96);
-        height: calc(100% / 96);
-        background: #fff;
-        opacity: 0;
-        transform: translate(calc(var(--burst-x) * 1px), calc(var(--burst-y) * 1px)) scale(0.18);
-        box-shadow: 0 0 4px rgba(255, 255, 255, 0.18);
-      }
-
-      .transition-overlay.is-playing .pixel {
-        animation: pixelConverge 980ms cubic-bezier(0.16, 1, 0.3, 1) both;
-        animation-delay: calc(var(--delay) * 1ms);
-      }
-
-      @keyframes pixelConverge {
-        0% {
-          opacity: 0;
-          transform: translate(calc(var(--burst-x) * 1px), calc(var(--burst-y) * 1px)) scale(0.25);
-        }
-
-        72% {
-          opacity: 0.86;
-          transform: translate(0, 0) scale(1.04);
-        }
-
-        100% {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-        }
-      }
 
       .pricing {
         display: grid;
@@ -501,7 +402,7 @@
             <div class="test-card-copy">
               <h3>高敏感人格测试</h3>
               <p>55 个生活场景，测试你对情绪、细节和关系信号的接收强度。</p>
-              <a class="article-link" data-test-transition href="tests/high-sensitivity.html?from=transition">开始测试</a>
+              <a class="article-link" href="tests/high-sensitivity.html">开始测试</a>
             </div>
           </article>
           <article class="card">
@@ -522,24 +423,24 @@
         </div>
         <div class="article-list">
           <article class="card article-card">
-            <h3>你的悲惨人生完全来源于你把自己培养成一个工具</h3>
-            <a class="article-link" href="articles/tool-life.html">阅读全文</a>
+            <h3>你出身底层时，你周围的人都会给你洗脑，告诉你某些外界事物的利益比自身的利益更重要</h3>
+            <a class="article-link" href="articles_pages/bottom-origin.html">阅读全文</a>
           </article>
           <article class="card article-card">
-            <h3>如果你出身底层，整个社会都会阻止你爱自己；你的父母亲人，他们都不会教你爱自己，只会教你掏空自己</h3>
-            <a class="article-link" href="articles/love-yourself.html">阅读全文</a>
+            <h3>教育的本质是让你成为心智上成熟且生产技能上熟练的工具人</h3>
+            <a class="article-link" href="articles_pages/education-tool.html">阅读全文</a>
           </article>
           <article class="card article-card">
-            <h3>社会的第一性原理是利益，就算是你的父母把你带到这个世界上，也是出自他们自身的利益</h3>
-            <a class="article-link" href="articles/interest-first.html">阅读全文</a>
+            <h3>穷人多情，富人多爱</h3>
+            <a class="article-link" href="articles_pages/emotion-and-love.html">阅读全文</a>
           </article>
           <article class="card article-card">
-            <h3>穷人想逆袭，不靠学历，不靠编制，你需要这么做</h3>
-            <a class="article-link" href="articles/poor-reversal.html">阅读全文</a>
+            <h3>穷人活在幻想中，富人活在现实中</h3>
+            <a class="article-link" href="articles_pages/fantasy-vs-reality.html">阅读全文</a>
           </article>
           <article class="card article-card">
-            <h3>这个社会最大的陷阱就是先把你驯化成一个老实巴交的成年人然后用道德义务不断阻止你完成资本累积</h3>
-            <a class="article-link" href="articles/capital-trap.html">阅读全文</a>
+            <h3>绝大多数父母都是自私的，他们都不喜欢真实的孩子，他们只会喜欢那个他们预期中的那个乖孩子，一旦你不乖，他们就会勃然大怒痛斥你的自私</h3>
+            <a class="article-link" href="articles_pages/selfish-parents.html">阅读全文</a>
           </article>
         </div>
       </section>
@@ -569,68 +470,5 @@
     <footer>
       <span>© 2026 超人导师</span>
     </footer>
-    <div class="transition-overlay" data-transition-overlay aria-hidden="true">
-      <div class="transition-panel">
-        <div class="pixel-stage" aria-hidden="true">
-          <div class="pixel-grid" data-superconductor-icon></div>
-        </div>
-        <p class="transition-label">正在启动高敏感人格测试</p>
-      </div>
-    </div>
-    <script src="assets/superconductor-icon.js"></script>
-    <script>
-      (function () {
-        var icon = window.SUPERCONDUCTOR_ICON;
-        var target = document.querySelector("[data-superconductor-icon]");
-        var trigger = document.querySelector("[data-test-transition]");
-        var overlay = document.querySelector("[data-transition-overlay]");
-
-        if (!icon || !target) {
-          return;
-        }
-
-        var fragment = document.createDocumentFragment();
-
-        icon.pixels.forEach(function (pixel, index) {
-          var dot = document.createElement("span");
-          var angle = (pixel.x * 19 + pixel.y * 31 + index * 7) % 360;
-          var radius = 10 + ((pixel.x * pixel.y + index) % 24);
-          var burstX = Math.cos((angle * Math.PI) / 180) * radius;
-          var burstY = Math.sin((angle * Math.PI) / 180) * radius;
-          var delay = (pixel.y * 4 + pixel.x * 2) % 150;
-
-          dot.className = "pixel";
-          dot.style.setProperty("--x", pixel.x);
-          dot.style.setProperty("--y", pixel.y);
-          dot.style.setProperty("--burst-x", burstX.toFixed(2));
-          dot.style.setProperty("--burst-y", burstY.toFixed(2));
-          dot.style.setProperty("--delay", delay);
-          fragment.appendChild(dot);
-        });
-
-        target.appendChild(fragment);
-
-        if (!trigger || !overlay) {
-          return;
-        }
-
-        trigger.addEventListener("click", function (event) {
-          event.preventDefault();
-
-          overlay.classList.remove("is-active", "is-playing", "is-exiting");
-          void overlay.offsetWidth;
-          overlay.setAttribute("aria-hidden", "false");
-          overlay.classList.add("is-active");
-
-          window.setTimeout(function () {
-            overlay.classList.add("is-playing");
-          }, 280);
-
-          window.setTimeout(function () {
-            window.location.href = trigger.href;
-          }, 780);
-        });
-      })();
-    </script>
   </body>
 </html>
