@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>准超人六维测试答题 - 超人导师</title>
+    <link rel="stylesheet" href="six-test.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="shell quiz">
+        <header class="topbar whiteboard">
+          <a class="brand" href="../index.html">超人<span data-fill-default>导</span>师</a>
+          <div class="counter" id="topCounter">0 / 120 已答</div>
+        </header>
+
+        <div class="progress-card whiteboard">
+          <div class="progress-meta">
+            <span id="questionCount">第 1 / 120 题</span>
+            <span id="dimensionNow">主体性</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="question-card whiteboard">
+          <div class="dimension-badge" id="dimensionBadge">主体性</div>
+          <h1 class="question-title" id="questionTitle"></h1>
+          <div class="options" id="options"></div>
+        </article>
+
+        <nav class="quiz-actions">
+          <button class="comic-button secondary" id="prevButton" type="button">上一题</button>
+          <a class="comic-button secondary" href="test-intro.html">返回说明</a>
+        </nav>
+      </section>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script src="../assets/six-dimensions-questions.js"></script>
+    <script src="six-test.js"></script>
+    <script>
+      let state = loadState();
+      const questions = getQuestions();
+      const topCounter = document.getElementById("topCounter");
+      const questionCount = document.getElementById("questionCount");
+      const dimensionNow = document.getElementById("dimensionNow");
+      const progressFill = document.getElementById("progressFill");
+      const dimensionBadge = document.getElementById("dimensionBadge");
+      const questionTitle = document.getElementById("questionTitle");
+      const optionsEl = document.getElementById("options");
+      const prevButton = document.getElementById("prevButton");
+
+      if (!questions.length) showToast("题库没有加载成功");
+      if (isComplete(state)) location.href = "test-result.html";
+
+      function renderQuestion() {
+        const total = questions.length;
+        state.currentIndex = Math.min(Math.max(state.currentIndex || 0, 0), total - 1);
+        saveState(state);
+        const question = questions[state.currentIndex];
+        const answered = state.answers[question.id];
+        const count = answerCount(state);
+        topCounter.textContent = `${count} / ${total} 已答`;
+        questionCount.textContent = `第 ${state.currentIndex + 1} / ${total} 题`;
+        dimensionNow.textContent = question.dimension;
+        progressFill.style.width = `${(count / total) * 100}%`;
+        dimensionBadge.textContent = question.dimension;
+        questionTitle.textContent = question.text;
+        optionsEl.innerHTML = "";
+        question.options.forEach((option) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "option";
+          if (answered?.label === option.label) button.classList.add("is-selected");
+          button.textContent = `${option.label}. ${option.text}`;
+          button.addEventListener("click", () => {
+            state.answers[question.id] = { dimension: question.dimension, score: option.score, label: option.label };
+            if (state.currentIndex < total - 1) state.currentIndex += 1;
+            saveState(state);
+            if (isComplete(state)) location.href = "test-result.html";
+            else renderQuestion();
+          });
+          optionsEl.appendChild(button);
+        });
+        prevButton.disabled = state.currentIndex === 0;
+      }
+
+      prevButton.addEventListener("click", () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex -= 1;
+          saveState(state);
+          renderQuestion();
+        }
+      });
+
+      renderQuestion();
+    </script>
+  </body>
+</html>

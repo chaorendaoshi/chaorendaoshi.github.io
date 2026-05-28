@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>准超人六维测试结果 - 超人导师</title>
+    <link rel="stylesheet" href="six-test.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="shell result">
+        <header class="topbar whiteboard">
+          <a class="brand" href="../index.html">超人<span data-fill-default>导</span>师</a>
+          <div class="counter">测试完成</div>
+        </header>
+
+        <div class="result-copy whiteboard">
+          <h1>六维结果</h1>
+          <p class="lead">这是你当前的人生操作系统扫描。</p>
+        </div>
+
+        <div class="result-layout">
+          <div class="radar-card whiteboard">
+            <div class="radar-wrap">
+              <svg id="radar" viewBox="0 0 520 520" role="img" aria-label="六维雷达图"></svg>
+            </div>
+          </div>
+          <div class="scores-card whiteboard">
+            <ul class="score-list" id="scoreList"></ul>
+            <div class="total-result" id="totalResult"></div>
+          </div>
+        </div>
+
+        <section class="report-card whiteboard">
+          <h2>咨询优惠</h2>
+          <p class="lead">携带此报告咨询超人导师，获得100元优惠</p>
+          <div class="button-row">
+            <button class="comic-button" id="printReportButton" type="button">打印结果报告</button>
+            <button class="comic-button secondary" id="restartButton" type="button">重新测试</button>
+            <a class="comic-button secondary" href="../index.html">返回首页</a>
+          </div>
+        </section>
+      </section>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script src="../assets/six-dimensions-questions.js"></script>
+    <script src="six-test.js"></script>
+    <script>
+      let state = loadState();
+      if (!isComplete(state)) location.href = "test-quiz.html";
+      const scores = calculateScores(state);
+      const totalResult = calculateTotalResult(scores);
+      const scoreList = document.getElementById("scoreList");
+      const totalResultBox = document.getElementById("totalResult");
+      const radar = document.getElementById("radar");
+      scores.forEach((score) => {
+        const item = document.createElement("li");
+        item.className = "score-item";
+        item.innerHTML = `
+          <span>${score.dimension}</span>
+          <div class="score-bar" aria-hidden="true"><span style="width: ${score.percent}%"></span></div>
+          <strong>${score.percent}</strong>
+        `;
+        scoreList.appendChild(item);
+      });
+      totalResultBox.innerHTML = `
+        <span>总分</span>
+        <strong>${totalResult.total}/${totalResult.max}</strong>
+        <b>${totalResult.level}</b>
+      `;
+      renderRadar(radar, scores);
+
+      document.getElementById("restartButton").addEventListener("click", () => {
+        resetState();
+        location.href = "test-intro.html";
+      });
+
+      document.getElementById("printReportButton").addEventListener("click", async () => {
+        await copyWechat();
+        const canvas = drawReport(scores);
+        downloadCanvas(canvas, "准超人六维测试报告.png");
+        showToast(`已复制微信号：${WECHAT_ID}`);
+      });
+    </script>
+  </body>
+</html>

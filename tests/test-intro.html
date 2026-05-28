@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>准超人六维测试说明 - 超人导师</title>
+    <link rel="stylesheet" href="six-test.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="shell intro">
+        <header class="topbar whiteboard">
+          <a class="brand" href="../index.html">超人<span data-fill-default>导</span>师</a>
+          <div class="counter">准超人六维测试</div>
+        </header>
+        <div class="intro-grid">
+          <div class="intro-copy whiteboard">
+            <h1>准超人六维测试</h1>
+            <p class="lead">120 道生活经历题。不要选你想成为谁，选你真实经历过什么。</p>
+            <div class="button-row">
+              <button class="comic-button" id="startButton" type="button">开始测试</button>
+              <a class="comic-button secondary" href="../index.html">返回首页</a>
+            </div>
+          </div>
+          <aside class="rules whiteboard">
+            <h2>测试说明</h2>
+            <ul>
+              <li>题目按固定顺序呈现，方便你中途退出后继续。</li>
+              <li>每题 4 个选项，按真实经历作答。</li>
+              <li>结果会显示主体性、现实感、元认知、生命力、战术迭代力、造势力六项分数。</li>
+              <li>雷达图越外圈，代表该维度行为痕迹越强。</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <script src="../assets/six-dimensions-questions.js"></script>
+    <script src="six-test.js"></script>
+    <script>
+      document.getElementById("startButton").addEventListener("click", () => {
+        resetState();
+        location.href = "test-quiz.html";
+      });
+    </script>
+  </body>
+</html>
