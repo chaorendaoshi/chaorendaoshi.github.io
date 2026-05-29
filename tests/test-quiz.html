@@ -58,6 +58,7 @@
       let dragX = 0;
       let isDragging = false;
       const swipeThreshold = 96;
+      const nextCardDelay = 140;
 
       if (!questions.length) showToast("题库没有加载成功");
       if (isComplete(state)) location.href = "test-result.html";
@@ -85,6 +86,25 @@
         questionCard.style.setProperty("--no-opacity", 0);
       }
 
+      function prepareIncomingCard() {
+        questionCard.classList.remove("is-flying-yes", "is-flying-no");
+        questionCard.style.transition = "none";
+        questionCard.style.transform = "translateY(46px) scale(0.98)";
+        questionCard.style.backgroundColor = "";
+        questionCard.style.opacity = "0";
+        questionCard.style.setProperty("--yes-opacity", 0);
+        questionCard.style.setProperty("--no-opacity", 0);
+        questionCard.offsetHeight;
+      }
+
+      function playIncomingCard() {
+        requestAnimationFrame(() => {
+          questionCard.style.transition = "";
+          questionCard.style.transform = "";
+          questionCard.style.opacity = "";
+        });
+      }
+
       function answerQuestion(option, direction) {
         if (isAnimating) return;
         isAnimating = true;
@@ -108,11 +128,11 @@
             location.href = "test-result.html";
             return;
           }
-          questionCard.classList.remove("is-flying-yes", "is-flying-no");
-          resetCardMotion();
-          isAnimating = false;
+          prepareIncomingCard();
           renderQuestion();
-        }, 280);
+          playIncomingCard();
+          isAnimating = false;
+        }, nextCardDelay);
       }
 
       function optionForDirection(direction) {
