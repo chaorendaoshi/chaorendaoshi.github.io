@@ -199,10 +199,63 @@ h1 {
 }
 
 .question-card {
+  position: relative;
   display: grid;
   align-content: center;
   gap: clamp(20px, 4vh, 44px);
   padding: clamp(20px, 4vw, 64px);
+  min-height: min(58svh, 640px);
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 180ms ease,
+    opacity 180ms ease;
+  --yes-opacity: 0;
+  --no-opacity: 0;
+}
+
+.question-card.is-dragging {
+  cursor: grabbing;
+}
+
+.question-card.is-flying-yes {
+  transform: translateX(120vw) rotate(16deg);
+  background: #ff463a;
+  opacity: 0;
+}
+
+.question-card.is-flying-no {
+  transform: translateX(-120vw) rotate(-16deg);
+  background: #0060ff;
+  opacity: 0;
+}
+
+.swipe-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(92px, 20vw, 240px);
+  font-weight: 950;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.swipe-glow-yes {
+  opacity: var(--yes-opacity);
+}
+
+.swipe-glow-no {
+  opacity: var(--no-opacity);
+}
+
+.question-card > :not(.swipe-glow) {
+  position: relative;
+  z-index: 1;
 }
 
 .dimension-badge {
@@ -222,6 +275,13 @@ h1 {
   line-height: 1.12;
 }
 
+.swipe-hint {
+  margin: -14px 0 0;
+  font-size: clamp(15px, 1.5vw, 22px);
+  font-weight: 900;
+  opacity: 0.72;
+}
+
 .options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -235,10 +295,10 @@ h1 {
   box-shadow: 6px 6px 0 var(--ink);
   cursor: pointer;
   padding: clamp(14px, 2vw, 24px);
-  text-align: left;
-  font-size: clamp(17px, 1.8vw, 27px);
-  font-weight: 850;
-  line-height: 1.25;
+  font-size: clamp(28px, 4vw, 54px);
+  font-weight: 950;
+  line-height: 1;
+  text-align: center;
   transform: rotate(0deg) scale(1);
   transition:
     transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -257,6 +317,22 @@ h1 {
 
 .option.is-selected {
   background: var(--orange);
+}
+
+.option-no {
+  background: #eaf2ff;
+}
+
+.option-yes {
+  background: #ffe9e5;
+}
+
+.option-no.is-selected {
+  background: #8dbcff;
+}
+
+.option-yes.is-selected {
+  background: #ff8a7f;
 }
 
 .option:active,
@@ -372,8 +448,7 @@ h1 {
 
 @media (max-width: 900px) {
   .intro-grid,
-  .result-layout,
-  .options {
+  .result-layout {
     grid-template-columns: 1fr;
   }
 

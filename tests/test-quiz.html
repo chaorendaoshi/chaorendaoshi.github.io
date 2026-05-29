@@ -22,9 +22,12 @@
           <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
-        <article class="question-card whiteboard">
+        <article class="question-card whiteboard" id="questionCard">
+          <div class="swipe-glow swipe-glow-no" aria-hidden="true">否</div>
+          <div class="swipe-glow swipe-glow-yes" aria-hidden="true">是</div>
           <div class="dimension-badge" id="dimensionBadge">主体性</div>
           <h1 class="question-title" id="questionTitle"></h1>
+          <p class="swipe-hint">左滑选否，右滑选是</p>
           <div class="options" id="options"></div>
         </article>
 
@@ -44,16 +47,81 @@
       const questionCount = document.getElementById("questionCount");
       const dimensionNow = document.getElementById("dimensionNow");
       const progressFill = document.getElementById("progressFill");
+      const questionCard = document.getElementById("questionCard");
       const dimensionBadge = document.getElementById("dimensionBadge");
       const questionTitle = document.getElementById("questionTitle");
       const optionsEl = document.getElementById("options");
       const prevButton = document.getElementById("prevButton");
+      let isAnimating = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let dragX = 0;
+      let isDragging = false;
+      const swipeThreshold = 96;
 
       if (!questions.length) showToast("题库没有加载成功");
       if (isComplete(state)) location.href = "test-result.html";
 
+      function applyCardMotion(x, withTransition = false) {
+        const limited = Math.max(Math.min(x, 190), -190);
+        const ratio = Math.min(Math.abs(limited) / 160, 1);
+        const rotate = limited / 18;
+        const red = Math.round(255 * ratio);
+        const green = Math.round((limited > 0 ? 70 : 96) * ratio);
+        const blue = Math.round((limited > 0 ? 58 : 255) * ratio);
+        questionCard.style.transition = withTransition ? "" : "none";
+        questionCard.style.transform = `translateX(${limited}px) rotate(${rotate}deg)`;
+        questionCard.style.backgroundColor = `rgb(${255 - (255 - red) * ratio}, ${255 - (255 - green) * ratio}, ${255 - (255 - blue) * ratio})`;
+        questionCard.style.setProperty("--yes-opacity", limited > 0 ? ratio : 0);
+        questionCard.style.setProperty("--no-opacity", limited < 0 ? ratio : 0);
+      }
+
+      function resetCardMotion() {
+        questionCard.style.transition = "";
+        questionCard.style.transform = "";
+        questionCard.style.backgroundColor = "";
+        questionCard.style.opacity = "";
+        questionCard.style.setProperty("--yes-opacity", 0);
+        questionCard.style.setProperty("--no-opacity", 0);
+      }
+
+      function answerQuestion(option, direction) {
+        if (isAnimating) return;
+        isAnimating = true;
+        state.answers[questions[state.currentIndex].id] = {
+          dimension: questions[state.currentIndex].dimension,
+          score: option.score,
+          label: option.label
+        };
+        saveState(state);
+        questionCard.classList.add(direction > 0 ? "is-flying-yes" : "is-flying-no");
+        questionCard.style.transition = "";
+        questionCard.style.transform = `translateX(${direction > 0 ? 120 : -120}vw) rotate(${direction > 0 ? 16 : -16}deg)`;
+        questionCard.style.backgroundColor = direction > 0 ? "#ff463a" : "#0060ff";
+        questionCard.style.opacity = "0";
+        questionCard.style.setProperty("--yes-opacity", direction > 0 ? 1 : 0);
+        questionCard.style.setProperty("--no-opacity", direction < 0 ? 1 : 0);
+        window.setTimeout(() => {
+          if (state.currentIndex < total - 1) state.currentIndex += 1;
+          saveState(state);
+          if (isComplete(state)) {
+            location.href = "test-result.html";
+            return;
+          }
+          questionCard.classList.remove("is-flying-yes", "is-flying-no");
+          resetCardMotion();
+          isAnimating = false;
+          renderQuestion();
+        }, 280);
+      }
+
+      function optionForDirection(direction) {
+        const question = questions[state.currentIndex];
+        return question.options.find((option) => direction > 0 ? option.label === "是" : option.label === "否");
+      }
+
       function renderQuestion() {
-        const total = questions.length;
+        total = questions.length;
         state.currentIndex = Math.min(Math.max(state.currentIndex || 0, 0), total - 1);
         saveState(state);
         const question = questions[state.currentIndex];
@@ -69,25 +137,63 @@
         question.options.forEach((option) => {
           const button = document.createElement("button");
           button.type = "button";
-          button.className = "option";
+          button.className = `option option-${option.label === "是" ? "yes" : "no"}`;
           if (answered?.label === option.label) button.classList.add("is-selected");
-          button.textContent = `${option.label}. ${option.text}`;
+          button.setAttribute("aria-label", option.label);
+          button.textContent = option.label === "是" ? "是 →" : "← 否";
           button.addEventListener("click", () => {
-            state.answers[question.id] = { dimension: question.dimension, score: option.score, label: option.label };
-            if (state.currentIndex < total - 1) state.currentIndex += 1;
-            saveState(state);
-            if (isComplete(state)) location.href = "test-result.html";
-            else renderQuestion();
+            answerQuestion(option, option.label === "是" ? 1 : -1);
           });
           optionsEl.appendChild(button);
         });
         prevButton.disabled = state.currentIndex === 0;
       }
 
+      let total = questions.length;
+
+      questionCard.addEventListener("pointerdown", (event) => {
+        if (isAnimating || event.target.closest("button, a")) return;
+        isDragging = true;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        dragX = 0;
+        questionCard.setPointerCapture(event.pointerId);
+        questionCard.classList.add("is-dragging");
+      });
+
+      questionCard.addEventListener("pointermove", (event) => {
+        if (!isDragging) return;
+        const dx = event.clientX - dragStartX;
+        const dy = event.clientY - dragStartY;
+        if (Math.abs(dx) > Math.abs(dy)) event.preventDefault();
+        dragX = dx;
+        applyCardMotion(dx);
+      });
+
+      questionCard.addEventListener("pointerup", () => {
+        if (!isDragging) return;
+        isDragging = false;
+        questionCard.classList.remove("is-dragging");
+        if (Math.abs(dragX) >= swipeThreshold) {
+          const direction = dragX > 0 ? 1 : -1;
+          const option = optionForDirection(direction);
+          if (option) answerQuestion(option, direction);
+          return;
+        }
+        resetCardMotion();
+      });
+
+      questionCard.addEventListener("pointercancel", () => {
+        isDragging = false;
+        questionCard.classList.remove("is-dragging");
+        resetCardMotion();
+      });
+
       prevButton.addEventListener("click", () => {
         if (state.currentIndex > 0) {
           state.currentIndex -= 1;
           saveState(state);
+          resetCardMotion();
           renderQuestion();
         }
       });

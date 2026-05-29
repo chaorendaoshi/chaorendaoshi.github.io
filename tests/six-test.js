@@ -1,7 +1,8 @@
 const SIX_TEST_KEY = "supermanSixTestState";
+const SIX_TEST_VERSION = 2;
 const WECHAT_ID = "Wine2003218";
 const DIMENSIONS = ["主体性", "现实感", "元认知", "生命力", "战术迭代力", "造势力"];
-const MAX_PER_DIMENSION = 20 * 3;
+const MAX_PER_DIMENSION = 20;
 const MAX_TOTAL_PERCENT = 100;
 
 function getQuestions() {
@@ -10,6 +11,7 @@ function getQuestions() {
 
 function blankState() {
   return {
+    version: SIX_TEST_VERSION,
     startedAt: Date.now(),
     currentIndex: 0,
     answers: {}
@@ -18,7 +20,8 @@ function blankState() {
 
 function loadState() {
   try {
-    return JSON.parse(localStorage.getItem(SIX_TEST_KEY)) || blankState();
+    const state = JSON.parse(localStorage.getItem(SIX_TEST_KEY)) || blankState();
+    return state.version === SIX_TEST_VERSION ? state : blankState();
   } catch {
     return blankState();
   }
@@ -274,7 +277,7 @@ function downloadCanvas(canvas, filename) {
   link.click();
 }
 
-window.__sixTestFillDefault = function __sixTestFillDefault(optionLabel = "A") {
+window.__sixTestFillDefault = function __sixTestFillDefault(optionLabel = "否") {
   const questions = getQuestions();
   const state = blankState();
   questions.forEach((question) => {
